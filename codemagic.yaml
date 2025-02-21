@@ -5,7 +5,7 @@ workflows:
     environment:
       vars:
         PACKAGE_NAME: "com.miningapp"
-        GRADLE_JVM_ARGS: "-Xmx6g"
+        GRADLE_JVM_ARGS: "-Xmx3g" # Reduziere Speicher
     scripts:
       - name: Check Java 17 Installation
         script: |
@@ -48,6 +48,6 @@ workflows:
       - name: Build Debug APK
         script: |
           export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=$GRADLE_JVM_ARGS"
-          ./gradlew assembleDebug --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle --max-workers=2
+          ./gradlew assembleDebug --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle --max-workers=1 # Reduziere auf 1 Worker
     artifacts:
       - app/build/outputs/apk/debug/*.apk
