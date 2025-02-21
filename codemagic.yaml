@@ -2,9 +2,11 @@ workflows:
   android-build:
     name: Build APK
     max_build_duration: 60
-    instance_type: linux_x2  # Verwende eine Linux-Maschine für mehr Stabilität
+    instance_type: linux_x2  # Mehr RAM für Codemagic
     environment:
       android_signing:
+        credentials:
+          release: release-key
       vars:
         PACKAGE_NAME: "com.miningapp"
     scripts:
@@ -22,5 +24,6 @@ workflows:
         script: |
           export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx512m"
           ./gradlew assembleDebug --no-daemon --stacktrace
+
     artifacts:
       - app/build/outputs/*/.apk
