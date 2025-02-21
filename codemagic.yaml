@@ -18,10 +18,6 @@ workflows:
           chmod +x gradlew
           chmod +x gradle/wrapper/gradle-wrapper.jar
 
-      - name: Clean Project
-        script: |
-          ./gradlew clean --no-daemon
-
       - name: Build Debug APK
         script: |
           export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx512m"
