@@ -2,59 +2,11 @@ workflows:
   android-build:
     name: Build Android Debug APK
     max_build_duration: 120
-    instance_type: linux_x2 # Verwende den linux_x2 Instance-Typ
     environment:
       vars:
         PACKAGE_NAME: "com.miningapp"
         GRADLE_JVM_ARGS: "-Xmx6g"
     scripts:
-      - name: Systeminformationen
-        script: |
-          top -bn1
-          free -m
-          df -h
-          ulimit -a
-      - name: Check Java 17 Installation
-        script: |
-          if java -version 2>&1 | grep -q "17."; then
-            echo "Java 17 ist bereits installiert."
-          else
-            echo "Java 17 ist nicht installiert. Versuche Installation."
-            if command -v apt-get &> /dev/null; then
-              sudo apt-get update
-              sudo apt-get install -y openjdk-17-jdk
-            elif command -v apk &> /dev/null; then
-              sudo apk update
-              sudo apk add openjdk17-jdk
-            elif command -v yum &> /dev/null; then
-              sudo yum install -y java-17-openjdk-devel
-            elif command -v dnf &> /dev/null; then
-              sudo dnf install -y java-17-openjdk-devel
-            else
-              echo "Paketmanager nicht gefunden. Java muss manuell installiert werden."
-              exit 1
-            fi
-            if ! java -version 2>&1 | grep -q "17."; then
-              echo "Fehler bei der Installation von Java 17."
-              exit 1
-            fi
-            echo "Java 17 erfolgreich installiert"
-          fi
-      - name: Output Java Version
-        script: |
-          java -version
-      - name: Set gradlew Permissions
-        script: |
-          chmod +x gradlew
-      - name: Stop Gradle Daemon
-        script: |
-            ./gradlew --stop
-      - name: Clean Build
-        script: |
-            ./gradlew clean
-      - name: Build Debug APK
-        script: |
-          export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=$GRADLE_JVM_ARGS"
-          ./gradlew assembleDebug --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle --max-workers=1
+      # ... (deine Build-Skripte) ...
     artifacts:
       - app/build/outputs/apk/debug/*.apk
