@@ -5,7 +5,6 @@ workflows:
     instance_type: linux_x2  # Nutze eine stabile Linux-Instanz
     environment:
       android_signing:
-        - release-key  # Falls ein Release-Keystore verwendet wird
       vars:
         PACKAGE_NAME: "com.miningapp"
     scripts:
