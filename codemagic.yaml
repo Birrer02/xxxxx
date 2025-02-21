@@ -1,36 +1,31 @@
 workflows:
   android-build:
     name: Build Android APKs
-    max_build_duration: 120 # Erhöht, falls Release Build länger dauert
-    instance_type: linux_x2 # Mehr RAM für Codemagic
+    max_build_duration: 120
     environment:
       android_signing:
         credentials:
           release: release-key
       vars:
         PACKAGE_NAME: "com.miningapp"
-        GRADLE_JVM_ARGS: "-Xmx4g" # Erhöht den Speicher für Gradle
+        GRADLE_JVM_ARGS: "-Xmx4g"
     scripts:
       - name: Install Java (Falls nicht vorhanden)
         script: |
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk
-
       - name: Set Gradle permissions
         script: |
           chmod +x gradlew
           chmod +x gradle/wrapper/gradle-wrapper.jar
-
       - name: Build Debug APK
         script: |
           export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=$GRADLE_JVM_ARGS"
           ./gradlew assembleDebug --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle
-
       - name: Build Release APK
         script: |
           export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=$GRADLE_JVM_ARGS"
           ./gradlew assembleRelease --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle
-
     artifacts:
       - app/build/outputs/apk/debug/*.apk
       - app/build/outputs/apk/release/*.apk
