@@ -5,7 +5,6 @@ workflows:
     instance_type: linux_x2  # Mehr RAM für Codemagic
     environment:
       android_signing:
-      credentials: release
       vars:
         PACKAGE_NAME: "com.miningapp"
     scripts:
