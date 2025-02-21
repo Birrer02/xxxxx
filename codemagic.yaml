@@ -1,18 +1,15 @@
 workflows:
   android-build:
-    name: Build APK
-    max_build_duration: 60
-    instance_workflows:
-  android-build:
-    name: Build APK
-    max_build_duration: 60
-    instance_type: linux_x2  # Mehr RAM für Codemagic
+    name: Build Android APKs
+    max_build_duration: 120 # Erhöht, falls Release Build länger dauert
+    instance_type: linux_x2 # Mehr RAM für Codemagic
     environment:
       android_signing:
         credentials:
           release: release-key
       vars:
         PACKAGE_NAME: "com.miningapp"
+        GRADLE_JVM_ARGS: "-Xmx4g" # Erhöht den Speicher für Gradle
     scripts:
       - name: Install Java (Falls nicht vorhanden)
         script: |
@@ -26,29 +23,14 @@ workflows:
 
       - name: Build Debug APK
         script: |
-          export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx512m"
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=$GRADLE_JVM_ARGS"
+          ./gradlew assembleDebug --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle
+
+      - name: Build Release APK
+        script: |
+          export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=$GRADLE_JVM_ARGS"
+          ./gradlew assembleRelease --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle
 
     artifacts:
-      - app/build/outputs/*/.apktype: linux_x2  # Mehr RAM für Codemagic
-    environment:
-      vars:
-        PACKAGE_NAME: "com.miningapp"
-    scripts:
-      - name: Install Java (Falls nicht vorhanden)
-        script: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk
-
-      - name: Set Gradle permissions
-        script: |
-          chmod +x gradlew
-          chmod +x gradle/wrapper/gradle-wrapper.jar
-
-      - name: Build Debug APK
-        script: |
-          export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx512m"
-          ./gradlew assembleDebug --no-daemon --stacktrace
-
-    artifacts:
-      - app/build/outputs/*/.apk
+      - app/build/outputs/apk/debug/*.apk
+      - app/build/outputs/apk/release/*.apk
