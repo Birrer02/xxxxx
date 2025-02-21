@@ -24,6 +24,11 @@ workflows:
 
       - name: Build Debug APK
         script: |
+          export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx512m"
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+    artifacts:
+      - app/build/outputs/*/.apk
           ./gradlew assembleDebug --no-daemon
 
     artifacts:
