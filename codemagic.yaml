@@ -5,7 +5,7 @@ workflows:
     environment:
       vars:
         PACKAGE_NAME: "com.miningapp"
-        GRADLE_JVM_ARGS: "-Xmx4g"
+        GRADLE_JVM_ARGS: "-Xmx8g" # Erhöht den Speicher auf 8GB
     scripts:
       - name: Check Java 17 Installation
         script: |
@@ -43,6 +43,6 @@ workflows:
       - name: Build Debug APK
         script: |
           export GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=$GRADLE_JVM_ARGS"
-          ./gradlew assembleDebug --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle
+          ./gradlew assembleDebug --no-daemon --stacktrace --gradle-user-home=$PWD/.gradle --max-workers=4 # Begrenzt parallele Prozesse
     artifacts:
       - app/build/outputs/apk/debug/*.apk
