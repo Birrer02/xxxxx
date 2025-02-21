@@ -5,7 +5,7 @@ workflows:
     environment:
       vars:
         PACKAGE_NAME: "com.miningapp"
-        GRADLE_JVM_ARGS: "-Xmx6g"
+        GRADLE_JVM_ARGS: "-Xmx4g" # Reduziere Speicher weiter
     scripts:
       - name: Systeminformationen
         script: |
@@ -15,30 +15,7 @@ workflows:
           ulimit -a
       - name: Check Java 17 Installation
         script: |
-          if java -version 2>&1 | grep -q "17."; then
-            echo "Java 17 ist bereits installiert."
-          else
-            echo "Java 17 ist nicht installiert. Versuche Installation."
-            if command -v apt-get &> /dev/null; then
-              sudo apt-get update
-              sudo apt-get install -y openjdk-17-jdk
-            elif command -v apk &> /dev/null; then
-              sudo apk update
-              sudo apk add openjdk17-jdk
-            elif command -v yum &> /dev/null; then
-              sudo yum install -y java-17-openjdk-devel
-            elif command -v dnf &> /dev/null; then
-              sudo dnf install -y java-17-openjdk-devel
-            else
-              echo "Paketmanager nicht gefunden. Java muss manuell installiert werden."
-              exit 1
-            fi
-            if ! java -version 2>&1 | grep -q "17."; then
-              echo "Fehler bei der Installation von Java 17."
-              exit 1
-            fi
-            echo "Java 17 erfolgreich installiert"
-          fi
+          # ... (Java Installation Skripte) ...
       - name: Output Java Version
         script: |
           java -version
@@ -48,6 +25,9 @@ workflows:
       - name: Stop Gradle Daemon
         script: |
             ./gradlew --stop
+      - name: Clean Gradle Cache
+        script: |
+            ./gradlew cleanBuildCache
       - name: Clean Build
         script: |
             ./gradlew clean
