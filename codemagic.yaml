@@ -4,6 +4,9 @@ workflows:
     max_build_duration: 120 # Erhöht, falls Release Build länger dauert
     instance_type: linux_x2 # Mehr RAM für Codemagic
     environment:
+      android_signing:
+        credentials:
+          release: release-key
       vars:
         PACKAGE_NAME: "com.miningapp"
         GRADLE_JVM_ARGS: "-Xmx4g" # Erhöht den Speicher für Gradle
