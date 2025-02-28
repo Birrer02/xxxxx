@@ -1,17 +1,34 @@
 workflows:
-  android-build:
-    name: Build Android Debug APK
+  android-release:
+    name: Android Release Build
     max_build_duration: 120
     environment:
+      flutter: stable
       vars:
-        PACKAGE_NAME: "com.miningapp"
-        GRADLE_JVM_ARGS: "-Xmx2g" # Noch weiter runter
+        PACKAGE_NAME: "com.example.myapp" # Ersetze mit deinem Paketnamen
+      groups:
+        - google_credentials # Stelle sicher, dass diese Env-Var existiert
+
     scripts:
-      - name: Set gradlew Permissions
-        script: |
-          chmod +x gradlew
-      - name: Stop Gradle Daemon
-        script: |
-            ./gradlew --stop
+      - echo "📦 Running Flutter Clean"
+      - flutter clean
+      - echo "📦 Running Flutter Pub Get"
+      - flutter pub get
+      - echo "🔧 Building APK"
+      - flutter build apk --release
+
     artifacts:
-      - app/build/outputs/apk/debug/*.apk
+      - build/*/outputs//.apk # Stellt sicher, dass das APK gespeichert wird
+
+    publishing:
+      email:
+        recipients:
+          - deine-email@example.com  # Ersetze mit deiner E-Mail
+      android:
+        artifacts:
+          - app-release.apk
+        signing:
+          credentials: $CM_KEYSTORE_PATH
+          keystore_password: $CM_KEYSTORE_PASSWORD
+          key_alias: $CM_KEY_ALIAS
+          key_password: $CM_KEY_PASSWORD
