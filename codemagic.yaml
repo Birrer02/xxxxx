@@ -9,9 +9,9 @@ workflows:
       groups:
         - google_credentials # Stelle sicher, dass diese Env-Var existiert
 
-    working_directory: app  # Stellt sicher, dass alle Befehle im /app-Ordner ausgeführt werden
-
     scripts:
+      - echo "📦 Moving to app directory"
+      - cd app
       - echo "📦 Running Flutter Clean"
       - flutter clean
       - echo "📦 Running Flutter Pub Get"
@@ -20,7 +20,7 @@ workflows:
       - flutter build apk --release
 
     artifacts:
-      - build/*/outputs//.apk # Stellt sicher, dass das APK gespeichert wird
+      - app/build/*/outputs//.apk # Stellt sicher, dass das APK gespeichert wird
 
     publishing:
       android:
