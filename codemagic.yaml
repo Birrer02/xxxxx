@@ -9,6 +9,8 @@ workflows:
       groups:
         - google_credentials # Stelle sicher, dass diese Env-Var existiert
 
+    working_directory: app  # WICHTIG: Das gibt an, wo sich dein Flutter-Projekt befindet!
+
     scripts:
       - echo "📦 Running Flutter Clean"
       - flutter clean
@@ -21,9 +23,6 @@ workflows:
       - build/*/outputs//.apk # Stellt sicher, dass das APK gespeichert wird
 
     publishing:
-      email:
-        recipients:
-          - deine-email@example.com  # Ersetze mit deiner E-Mail
       android:
         artifacts:
           - app-release.apk
