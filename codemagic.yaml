@@ -9,7 +9,7 @@ workflows:
       groups:
         - google_credentials # Stelle sicher, dass diese Env-Var existiert
 
-    working_directory: app  # WICHTIG: Das gibt an, wo sich dein Flutter-Projekt befindet!
+    working_directory: app  # Stellt sicher, dass alle Befehle im /app-Ordner ausgeführt werden
 
     scripts:
       - echo "📦 Running Flutter Clean"
